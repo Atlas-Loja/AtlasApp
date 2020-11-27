@@ -8,14 +8,10 @@ import styled from "styled-components/native";
 
 const DashboardContainer = styled.View``;
 
-export default function LoginScreen(props) {
+export default function DashboardScreen(props) {
   return (
     <DashboardContainer>
       <Image source={Atlaslogo} />
-      <Button
-        title="Login Screen"
-        onPress={() => props.navigation.navigate("Login")}
-      />
     </DashboardContainer>
   );
 }
