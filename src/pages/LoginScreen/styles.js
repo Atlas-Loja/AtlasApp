@@ -7,24 +7,38 @@ export const DashboardMain = styled.View`
   height: 100%;
 `;
 
-export const AtlasButton = styled.TouchableOpacity`
-  margin-top: 10%;
-  margin-left: 15%;
-  align-items: center;
-  justify-content: center;
-  background-color: #0263fa;
-  border-radius: 10px;
-  width: 70%;
-  height: 7%;
+export const FooterReportButton = styled.TouchableOpacity`
+  position: absolute;
+  left: 85%;
+  right: 0;
+  bottom: 20%;
 `;
 
-export const LoginText = styled.Text`
+export const Footer = styled.View`
+  position: relative;
+  flex: 1;
+`;
+
+export const BodyText = styled.Text`
+  position: absolute;
+  top: 320px;
+  left: 150px;
   font-weight: bold;
-  font-size: 15px;
-  color: #fff;
+  font-size: 40px;
+  color: #162a4c;
+`;
+
+export const AtlasButton = styled.TouchableOpacity`
+  margin-top: 160%;
+  margin-left: 15%;
+  width: 70%;
 `;
 
 export const AtlasLogo = styled.Image`
-  margin-top: 10%;
-  margin-left: 12%;
+  position: absolute;
+  flex: 1;
+  top: 50px;
+  left: 135px;
+  height: 150;
+  width: 150;
 `;

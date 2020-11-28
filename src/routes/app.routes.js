@@ -7,7 +7,11 @@ const DashboardStack = createStackNavigator();
 
 const DashboardRoutes = () => (
   <DashboardStack.Navigator>
-    <DashboardStack.Screen name="DashboardScreen" component={DashboardScreen} />
+    <DashboardStack.Screen
+      name="DashboardScreen"
+      component={DashboardScreen}
+      options={{ headerShown: false }}
+    />
   </DashboardStack.Navigator>
 );
 
