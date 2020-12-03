@@ -10,7 +10,7 @@ const AuthRoutes = () => (
     <AuthStack.Screen
       name="LoginScreen"
       component={LoginScreen}
-      options={{ headerShown: false }}
+      options={{ headerShown: false, gestureEnabled: false }}
     />
   </AuthStack.Navigator>
 );

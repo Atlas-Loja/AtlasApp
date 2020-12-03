@@ -10,7 +10,7 @@ const DashboardRoutes = () => (
     <DashboardStack.Screen
       name="DashboardScreen"
       component={DashboardScreen}
-      options={{ headerShown: false }}
+      options={{ headerShown: false, gestureEnabled: false }}
     />
   </DashboardStack.Navigator>
 );

@@ -5,6 +5,7 @@ import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import React, { useState, useEffect, useRef } from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 import Routes from "./routes";
 import { AuthProvider } from "./contexts/auth";
@@ -24,6 +25,7 @@ export default function App() {
   const responseListener = useRef();
 
   useEffect(() => {
+    changeScreenOrientation();
     registerForPushNotificationsAsync().then((token) =>
       setExpoPushToken(token)
     );
@@ -47,6 +49,12 @@ export default function App() {
       Notifications.removeNotificationSubscription(responseListener);
     };
   }, []);
+
+  async function changeScreenOrientation() {
+    await ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.PORTRAIT_UP
+    );
+  }
 
   return (
     <NavigationContainer>

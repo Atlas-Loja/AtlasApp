@@ -2,15 +2,15 @@ import React from "react";
 import { Dimensions } from "react-native";
 import Svg, { Defs, LinearGradient, Stop, Path } from "react-native-svg";
 
-import { Header, AtlasLogo } from "./styles";
+import { AtlasHeader, AtlasLogo, AtlasLogoHeader, Text } from "./styles";
 import Atlaslogo from "../../../assets/AtlasLoja.png";
 
-export default function AuthHeader() {
+export default function Header({ children, title }) {
   const { width } = Dimensions.get("window");
 
   return (
     <>
-      <Header>
+      <AtlasHeader>
         <Svg width={width} height={width} viewBox="0 0 375 340">
           <Defs>
             <LinearGradient
@@ -30,8 +30,12 @@ export default function AuthHeader() {
             fillRule="evenodd"
           />
         </Svg>
-      </Header>
-      <AtlasLogo source={Atlaslogo} style={{ resizeMode: "contain" }} />
+      </AtlasHeader>
+      <AtlasLogoHeader>
+        <AtlasLogo source={Atlaslogo} style={{ resizeMode: "contain" }} />
+        <Text>{title}</Text>
+      </AtlasLogoHeader>
+      {children}
     </>
   );
 }
