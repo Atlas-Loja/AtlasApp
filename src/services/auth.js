@@ -1,13 +1,11 @@
-export function signIn() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        token: "KOAKSOK4OK123",
-        user: {
-          name: "Gabriel",
-          email: "joaogabriel@gmail.com",
-        },
-      });
-    }, 2000);
-  });
+import AtlasAPI from "./api";
+
+export function signIn(email, password) {
+  const response = AtlasAPI.post("/user/session", { email, password }).catch(
+    (error) => {
+      return error.response;
+    }
+  );
+  console.log(response);
+  return response;
 }

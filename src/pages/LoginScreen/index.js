@@ -1,7 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 
-import AuthContext from "../../contexts/auth";
+import { useAuth } from "../../contexts/auth";
 import Header from "../../components/Header";
+import validator from "validator";
 import {
   Platform,
   Keyboard,
@@ -9,6 +10,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { LinearGradient as Gradient } from "expo-linear-gradient";
 import {
@@ -21,7 +23,6 @@ import {
   ForgotPassword,
   AtlasFormFooter,
   FooterReportButton,
-  FooterCopyright,
 } from "./styles";
 import SvgUri from "expo-svg-uri";
 import {
@@ -32,14 +33,45 @@ import {
 import EmailPath from "../../../assets/alternate_email-black-24dp.svg";
 
 export default function LoginScreen(props) {
-  const { handleLogin } = useContext(AuthContext);
+  const { handleLogin } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visibility, setVisibility] = useState(false);
 
   function submitLogin() {
-    handleLogin();
+    if (validator.isEmail(email)) {
+      if (password.length >= 6 && password.length <= 30) {
+        handleLogin(email, password);
+        Keyboard.dismiss();
+      } else {
+        Alert.alert(
+          "Senha inválida",
+          "Sua senha deve conter somente de 6 a 30 caracteres.",
+          [
+            {
+              text: "Cancelar",
+              style: "cancel",
+            },
+            { text: "OK" },
+          ],
+          { cancelable: false }
+        );
+      }
+    } else {
+      Alert.alert(
+        "Endereço de e-mail inválido",
+        "Por favor, forneça um endereço de e-mail válido para efetuar login no aplicativo.",
+        [
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+          { text: "OK" },
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   return (

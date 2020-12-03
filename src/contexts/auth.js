@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
+import { Alert } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
 import { signIn } from "../services/auth";
@@ -31,20 +32,31 @@ export const AuthProvider = ({ children }) => {
     loadStoragedData();
   }, []);
 
-  async function checkToken() {}
+  async function handleLogin(email, password) {
+    const response = await signIn(email, password);
 
-  async function handleLogin() {
-    const response = await signIn();
+    if (response.status == 200) {
+      const data = response.data;
+      setUser(data.user);
 
-    setUser(response.user);
+      api.defaults.headers.Authorization = `Bearer ${data.session.token}`;
 
-    api.defaults.headers.Authorization = `Bearer ${response.token}`;
-
-    await AsyncStorage.setItem(
-      "@AtlasAuth:user",
-      JSON.stringify(response.user)
-    );
-    await AsyncStorage.setItem("@AtlasAuth:token", response.token);
+      await AsyncStorage.setItem("@AtlasAuth:user", JSON.stringify(data.user));
+      await AsyncStorage.setItem("@AtlasAuth:token", data.session.token);
+    } else {
+      Alert.alert(
+        "Ocorreu um erro ao tentar efetuar o login",
+        response.data[0].message,
+        [
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+          { text: "OK" },
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   function handleLogout() {
