@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../contexts/auth";
 import Header from "../../components/Header";
 import validator from "validator";
+import { isReachable } from "../../services/network";
 import {
   Platform,
   Keyboard,
@@ -11,6 +12,7 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient as Gradient } from "expo-linear-gradient";
 import {
@@ -38,23 +40,31 @@ export default function LoginScreen(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visibility, setVisibility] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  function submitLogin() {
+  async function submitLogin() {
+    setLoading(true);
+    const reachable = await isReachable();
+    if (!reachable) {
+      Alert.alert(
+        "Ops!",
+        "Não foi possível se conectar aos servidores da Atlas Loja.",
+        [{ text: "OK", onPress: () => setLoading(false) }],
+        { cancelable: false }
+      );
+
+      return;
+    }
     if (validator.isEmail(email)) {
       if (password.length >= 6 && password.length <= 30) {
-        handleLogin(email, password);
         Keyboard.dismiss();
+        handleLogin(email, password);
+        setLoading(false);
       } else {
         Alert.alert(
           "Senha inválida",
           "Sua senha deve conter somente de 6 a 30 caracteres.",
-          [
-            {
-              text: "Cancelar",
-              style: "cancel",
-            },
-            { text: "OK" },
-          ],
+          [{ text: "OK", onPress: () => setLoading(false) }],
           { cancelable: false }
         );
       }
@@ -62,13 +72,7 @@ export default function LoginScreen(props) {
       Alert.alert(
         "Endereço de e-mail inválido",
         "Por favor, forneça um endereço de e-mail válido para efetuar login no aplicativo.",
-        [
-          {
-            text: "Cancelar",
-            style: "cancel",
-          },
-          { text: "OK" },
-        ],
+        [{ text: "OK", onPress: () => setLoading(false) }],
         { cancelable: false }
       );
     }
@@ -137,6 +141,7 @@ export default function LoginScreen(props) {
           <AtlasFormFooter>
             <AtlasButton
               onPress={submitLogin}
+              disabled={loading}
               style={{
                 shadowColor: "#7E88C4",
                 shadowOffset: { width: 0, height: 8 },
@@ -161,7 +166,11 @@ export default function LoginScreen(props) {
                 <Text
                   style={{ fontSize: 22, color: "#fff", fontWeight: "bold" }}
                 >
-                  Autenticar
+                  {!loading ? (
+                    "Autenticar"
+                  ) : (
+                    <ActivityIndicator size="small" color="#FFFFFF" />
+                  )}
                 </Text>
               </Gradient>
             </AtlasButton>

@@ -34,26 +34,31 @@ export const AuthProvider = ({ children }) => {
 
   async function handleLogin(email, password) {
     const response = await signIn(email, password);
-
+    console.log(response);
+    if (!response) {
+      Alert.alert(
+        "Ops!",
+        "Estamos com problemas com nossos servidores no momento, por favor tente novamente mais tarde.",
+        [{ text: "OK" }],
+        { cancelable: false }
+      );
+      return;
+    }
     if (response.status == 200) {
       const data = response.data;
       setUser(data.user);
 
       api.defaults.headers.Authorization = `Bearer ${data.session.token}`;
 
-      await AsyncStorage.setItem("@AtlasAuth:user", JSON.stringify(data.user));
-      await AsyncStorage.setItem("@AtlasAuth:token", data.session.token);
+      await AsyncStorage.multiSet([
+        ["@AtlasAuth:user", JSON.stringify(data.user)],
+        ["@AtlasAuth:token", data.session.token],
+      ]);
     } else {
       Alert.alert(
         "Ocorreu um erro ao tentar efetuar o login",
         response.data[0].message,
-        [
-          {
-            text: "Cancelar",
-            style: "cancel",
-          },
-          { text: "OK" },
-        ],
+        [{ text: "OK" }],
         { cancelable: false }
       );
     }
